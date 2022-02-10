@@ -46,7 +46,9 @@ void loop() {
 
   forward();
   while (ultrasonic_center.read(INC) > 3) {
-    Serial.println("Distance from wall: " + ultrasonic_center.read(INC) + " inches");
+    Serial.println("Distance from wall: ");
+    Serial.println(ultrasonic_center.read(INC));
+    Serial.println(" inches");
   }
 
 }
