@@ -45,19 +45,9 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   forward();
-  while (ultrasonic1.read(INC) > 3) {
+  while (ultrasonic_center.read(INC) > 3) {
     Serial.println("Distance from wall: " + ultrasonic_center.read(INC) + " inches");
   }
-  halt();
-  left();
-  delay(2000);
-  forward();
-  while (ultrasonic1.read(INC) > 3) {
-    Serial.println("Distance from wall: " + ultrasonic_center.read(INC) + " inches");
-  }
-  halt();
-  left();
-  delay(2000);
 
 }
 
