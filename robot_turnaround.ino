@@ -50,14 +50,14 @@ void loop() {
   }
   halt();
   left();
-  delay(3000);
+  delay(2000);
   forward();
   while (ultrasonic1.read(INC) > 3) {
     Serial.println("Distance from wall: " + ultrasonic1.read(INC) + " inches");
   }
   halt();
   left();
-  delay(3000);
+  delay(2000);
 
 }
 
