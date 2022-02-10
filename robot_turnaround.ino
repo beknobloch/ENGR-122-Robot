@@ -27,6 +27,9 @@ void right();     //Subroutine to have the robot turn right
 void left();      //Subroutine to have the robot turn left
 void halt();      //Subroutine to have the robot stop
 
+// Logical variables
+
+
 
 
 void setup() {
@@ -44,11 +47,20 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  forward();
-  while (ultrasonic_center.read(INC) > 3) {
-    Serial.println("Distance from wall: ");
-    Serial.println(ultrasonic_center.read(INC));
-    Serial.println(" inches");
+  Serial.print("Distance from wall is ");
+  Serial.print(ultrasonic_center.read(INC));
+  Serial.println(" inches.");
+  
+  if (ultrasonic_center.read(INC) < 3) {
+    
+    halt();
+    delay(200);
+    
+    left();
+    delay(3000);
+    
+  } else {
+    forward();
   }
 
 }
