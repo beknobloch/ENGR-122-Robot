@@ -16,9 +16,9 @@
 Servo motor1;  // Creates a servo object called "motor1"
 Servo motor2;  // Creates a servo object called "motor2"
 
-Ultrasonic ultrasonic1(12, 13);  // An ultrasonic sensor HC-04
-Ultrasonic ultrasonic2(10);   // An ultrasonic sensor PING)))
-Ultrasonic ultrasonic3(8);    // An Seeed Studio ultrasonic sensor
+Ultrasonic ultrasonic1(9, 6);  // An ultrasonic sensor HC-04
+Ultrasonic ultrasonic1(8, 5);  // An ultrasonic sensor HC-04
+Ultrasonic ultrasonic1(10, 7);  // An ultrasonic sensor HC-04
 
 //Prototype the function names
 void forward();   //Subroutine to have the robot move forward
