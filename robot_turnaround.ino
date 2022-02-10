@@ -16,9 +16,9 @@
 Servo motor1;  // Creates a servo object called "motor1"
 Servo motor2;  // Creates a servo object called "motor2"
 
-Ultrasonic ultrasonic1(9, 6);  // An ultrasonic sensor HC-04
-Ultrasonic ultrasonic1(8, 5);  // An ultrasonic sensor HC-04
-Ultrasonic ultrasonic1(10, 7);  // An ultrasonic sensor HC-04
+Ultrasonic ultrasonic_driver(D8, D5);  // An ultrasonic sensor HC-04
+Ultrasonic ultrasonic_center(D9, D6);  // An ultrasonic sensor HC-04
+Ultrasonic ultrasonic_pass(D10, D7);  // An ultrasonic sensor HC-04
 
 //Prototype the function names
 void forward();   //Subroutine to have the robot move forward
@@ -46,14 +46,14 @@ void loop() {
 
   forward();
   while (ultrasonic1.read(INC) > 3) {
-    Serial.println("Distance from wall: " + ultrasonic1.read(INC) + " inches");
+    Serial.println("Distance from wall: " + ultrasonic_center.read(INC) + " inches");
   }
   halt();
   left();
   delay(2000);
   forward();
   while (ultrasonic1.read(INC) > 3) {
-    Serial.println("Distance from wall: " + ultrasonic1.read(INC) + " inches");
+    Serial.println("Distance from wall: " + ultrasonic_center.read(INC) + " inches");
   }
   halt();
   left();
@@ -66,13 +66,13 @@ void loop() {
 void forward()  // Has the motors go forward- even for 2020
   {
    motor1.write(70); // Driver motor D0 - furthest from 90 goes faster. 60 is faster than 80
-   motor2.write(70); // Passenger motor D2 
+   motor2.write(63); // Passenger motor D2 
    }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void reverse()  // Has the motors go in reverse - even for 2020
   {
     motor1.write(110);  //left  motor D0 - furthest from 90 goes faster. 120 is faster than 100
-    motor2.write(111);  //right motor D2 - 100 is slow but good for testing; 100 is much slower than 80 is fast
+    motor2.write(116);  //right motor D2 - 100 is slow but good for testing; 100 is much slower than 80 is fast
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void halt() // Has the motors stop
