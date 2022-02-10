@@ -42,7 +42,7 @@
  * or only the signal pin (for sensors 3 pins), like:
  * Ultrasonic ultrasonic(13);
  */
-Ultrasonic ultrasonic(12, 13);
+Ultrasonic ultrasonic(9, 6);
 int distance;
 
 void setup() {
