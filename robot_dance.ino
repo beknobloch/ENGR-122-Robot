@@ -75,13 +75,13 @@ delay (2000);
 void forward()  // Has the motors go forward- even for 2020
   {
    motor1.write(70); // Driver motor D0 - furthest from 90 goes faster. 60 is faster than 80
-   motor2.write(65); // Passenger motor D2 
+   motor2.write(63); // Passenger motor D2 
    }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void reverse()  // Has the motors go in reverse - even for 2020
   {
     motor1.write(110);  //left  motor D0 - furthest from 90 goes faster. 120 is faster than 100
-    motor2.write(115);  //right motor D2 - 100 is slow but good for testing; 100 is much slower than 80 is fast
+    motor2.write(116);  //right motor D2 - 100 is slow but good for testing; 100 is much slower than 80 is fast
   }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void halt() // Has the motors stop
