@@ -76,11 +76,9 @@ void loop() {
     delay(500);
     motor1.write(90);
     motor2.write(0);
-    delay(1100);
+    delay(550);
     motor1.write(90);
     motor2.write(90);
-    delay(250);
-    motor1.write(90);
-    motor2.write(90);
+    delay(500);
   }
 }
