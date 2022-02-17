@@ -45,11 +45,12 @@ void loop() {
     sprintf(temp1, "%d", motor_control);
     sprintf(temp2, "%d", ultrasonic_value);
     const char *c = temp1;
+    const char *d = temp2;
     display.drawString(0, 0, "Motor Control");
     display.drawString(0, 15, "Value: ");
-    display.drawString(80, 16, motor_control);
+    display.drawString(80, 16, c);
     display.drawString(0, 30, "Distance: ");
-    display.drawString(80, 31, ultrasonic_value);
+    display.drawString(80, 31, d);
     display.drawString(0, 45, "inches");
 
     
