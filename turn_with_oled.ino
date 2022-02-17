@@ -30,15 +30,12 @@ void setup() {
   display.flipScreenVertically();
   display.drawString(0, 0, "Stevens Smart Robot");
   display.display();
-  
-  int ultrasonic_value;
-  int motor_conrol;
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-    motor_control = -1;
-    ultrasonic_value = -1;
+    int motor_control = 0;
+    int ultrasonic_value = 100;
     // OLED controls
     char temp1[50];
     char temp2[50];
