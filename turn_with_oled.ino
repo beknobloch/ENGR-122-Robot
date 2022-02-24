@@ -28,6 +28,7 @@ void setup() {
   // Display Setup
   display.init();
   display.flipScreenVertically();
+  display.setFont(Arial_MT_Plain_16);
   display.drawString(0, 0, "Stevens Smart Robot");
   display.display();
 }
