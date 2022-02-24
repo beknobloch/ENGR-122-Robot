@@ -36,7 +36,12 @@ void loop() {
   // put your main code here, to run repeatedly:
     int motor_control = 0;
     int ultrasonic_value = 100;
-    // OLED controls
+    
+  // Robot control
+  ultrasonic_value = ultrasonic_center.read(INC);
+  // motor_control = ?;
+  
+  // OLED controls
     char temp1[50];
     char temp2[50];
     sprintf(temp1, "%d", motor_control);
@@ -51,7 +56,7 @@ void loop() {
     display.drawString(0, 45, "inches");
 
     
-  
+    // Serial debugging
      Serial.print("Distance Driver(D8,D5) Center(D9,D6) Pass(D10,D7):   ");  // Print a caption
      ultrasonic_value = ultrasonic_driver.read(INC);
      Serial.print(ultrasonic_value);
@@ -61,22 +66,4 @@ void loop() {
      Serial.print(ultrasonic_pass.read(INC));
      Serial.println(" in. ");
 
-    
-    
-    motor1.write(0);
-    motor2.write(0);
-    motor_control = 0;
-   
-  if (ultrasonic_driver.read(INC) < 2.75 || ultrasonic_center.read(INC) < 2.75 || ultrasonic_pass.read(INC) < 2.75) {
-    motor1.write(90);
-    motor2.write(90);
-    motor_control = 90;
-    delay(500);
-    motor1.write(90);
-    motor2.write(0);
-    delay(550);
-    motor1.write(90);
-    motor2.write(90);
-    delay(500);
-  }
 }
