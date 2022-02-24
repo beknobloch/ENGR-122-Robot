@@ -56,12 +56,14 @@ void loop() {
     sprintf(temp2, "%d", ultrasonic_center.read(INC));
     const char *c = temp1;
     const char *d = temp2;
+    display.clear();
     display.drawString(0, 0, "Motor Control");
     display.drawString(0, 15, "Value: ");
     display.drawString(80, 16, c);
     display.drawString(0, 30, "Distance: ");
     display.drawString(80, 31, d);
     display.drawString(0, 45, "inches");
+    display.display();
 
 
     motor1.write(90);
