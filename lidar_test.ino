@@ -127,17 +127,24 @@ void loop() {
   y = testCollector[1];
 
   // OLED controls
-    char temp1[50];
-    char temp2[50];
-    sprintf(temp1, "%d", x);
-    sprintf(temp2, "%d", y);
-    const char *c = temp1;
-    const char *d = temp2;
-    display.clear();
-    display.drawString(0, 0, "x-coordinate");
-    display.drawString(80, 0, c);
-    display.drawString(0, 16, "y-coordinate");
-    display.drawString(80, 16, d);
-    display.drawString(0, 45, ":)");
-    display.display();
+  char temp1[50];
+  char temp2[50];
+  sprintf(temp1, "%d", x);
+  sprintf(temp2, "%d", y);
+  const char *c = temp1;
+  const char *d = temp2;
+  display.clear();
+  display.drawString(0, 0, "x-coordinate");
+  display.drawString(80, 0, c);
+  display.drawString(0, 16, "y-coordinate");
+  display.drawString(80, 16, d);
+  display.drawString(0, 45, ":)");
+  display.display();
+  
+  // Serial monitor controls
+  Serial.print("x-coordinate: ");
+  Serial.println(c);
+  Serial.print("y-coordinate: ");
+  Serial.println(d);
+  Serial.println("\n");
 }
