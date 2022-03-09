@@ -166,7 +166,23 @@ void loop() {
   
   // PSEUDOCODE:
     // If on_current_target:
-      // calculate angle to turn to that points the robot towards the next target.
+      // set target to the next target in the array.
+      // Calculate and point robot towards next target.
+      // tracing = 0;    <-- This indicates the robot is not "tracing" an obstacle.
+    // If tracing == 0:
+      // If the center sensor detects an obstacle:
+        // Check which peripheral sensor reports a further distance.
+        // Turn in that direction until the center sensor no longer detects an obstacle.
+        // turned_left ? tracing = -1 : tracing = 1;    <-- Left corresponds to -1, right to 1;
+      // Else:
+        // Move forward.
+    // Else:
+      // Calculate the direction towards the next target.
+      // If currently pointing in that direction:
+        // tracing = 0;
+      // Else:
+        // continue to trace the obstacle depending on the value of tracing.
+
     // If not pointing towards next target:
       // check if there is an obstacle in the direction of that "pointing" position.
       // If there is one:
