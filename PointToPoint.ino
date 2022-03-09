@@ -104,6 +104,18 @@ void setup() {
   display.display();
 }
 
+int [10] target_coords = {};
+
+double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two)  return atan2(y_two - y_one, x_two - x_one);
+
+int angle_value_to_motor_values(double angle) {
+
+  // Add code for converting an angle into appropriate motor values.
+
+}
+
+int current_target = 0;
+
 void loop() {
   //subscribe the data from MQTT server
   if (!client.connected()) {
@@ -152,5 +164,20 @@ void loop() {
   Serial.println(d);
   Serial.println("\n");
   
+  // PSEUDOCODE:
+    // If on_current_target:
+      // calculate angle to turn to that points the robot towards the next target.
+    // If not pointing towards next target:
+      // check if there is an obstacle in the direction of that "pointing" position.
+      // If there is one:
+        // continue to "trace" the obstacle.
+      // Else:
+        // return to "pointing" position.
+    // Else:
+      // If the way forward is clear:
+        // move forward.
+      // Else:
+        // Check whether it is better to turn left or right and turn that way until no longer blocked in front.
+        // Move forward.
   
 }
