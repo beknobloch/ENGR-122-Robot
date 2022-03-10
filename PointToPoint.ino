@@ -104,8 +104,6 @@ void setup() {
   display.display();
 }
 
-int [10] target_coords = {};
-
 double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two)  return atan2(y_two - y_one, x_two - x_one);
 
 int angle_value_to_motor_values(double angle) {
@@ -114,7 +112,21 @@ int angle_value_to_motor_values(double angle) {
 
 }
 
+bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
+{
+  if (abs(x_one - x_two) > tolerance) return false;
+  if (abs(y_one - y_two) > tolerance) return false;
+  return true;
+}
+
+// Define logical variables.
+
+int [10] target_coords = {};
 int current_target = 0;
+int tracing = 0;
+
+int arrival_tolerance = 0;
+int proximity_tolerance = 4;
 
 void loop() {
   //subscribe the data from MQTT server
@@ -164,6 +176,7 @@ void loop() {
   Serial.println(d);
   Serial.println("\n");
   
+
   // PSEUDOCODE:
     // If on_current_target:
       // set target to the next target in the array.
@@ -183,17 +196,51 @@ void loop() {
       // Else:
         // continue to trace the obstacle depending on the value of tracing.
 
-    // If not pointing towards next target:
-      // check if there is an obstacle in the direction of that "pointing" position.
-      // If there is one:
-        // continue to "trace" the obstacle.
-      // Else:
-        // return to "pointing" position.
-    // Else:
-      // If the way forward is clear:
-        // move forward.
-      // Else:
-        // Check whether it is better to turn left or right and turn that way until no longer blocked in front.
-        // Move forward.
+  // Real Code:
+
+  int tar_x = target_coords[current_target * 2];
+  int tar_y = target_coords[current_target * 2 + 1];
+
+  if (coords_overlap(c, d, tar_x, tar_y))
+  {
+    current_target++;
+    // Calculate and point robot towards next target.
+    tracing = 0;
+  }
+  if (tracing == 0)
+  {
+    double center = ultrasonic_center.read(INC);
+    double pass = ultrasonic_pass.read(INC);
+    double driver = ultrasonic_driver.read(INC);
+    if (center < proximity_tolerance)
+    {
+      if (driver < proximity_tolerance)
+      {
+        if (pass < proximity_tolerance)
+        {
+          bool choose_direction = driver < pass;
+          // Turn to the direction with the further distance.
+          // Set tracing to appropriate value.
+        } else
+        {
+          // Turn to the driver's side.
+          tracing = -1;
+        }
+      } else if (pass < proximity_tolerance)
+      {
+        // Turn to the passenger's side.
+        tracing = 1;
+      } else
+      {
+        // Turn around.
+      }
+    } else  // No central obstacle detected.
+    {
+      // Move forward a little bit.
+    }
+  } else  // tracing != 0
+  {
+    
+  }
   
 }
