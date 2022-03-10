@@ -181,7 +181,7 @@ void loop() {
     // If on_current_target:
       // set target to the next target in the array.
       // Calculate and point robot towards next target.
-      // tracing = 0;    <-- This indicates the robot is not "tracing" an obstacle.
+      // tracing = 0;    <-- This indicates the robot is not navigating around ("tracing") an obstacle.
     // If tracing == 0:
       // If the center sensor detects an obstacle:
         // Check which peripheral sensor reports a further distance.
@@ -197,7 +197,6 @@ void loop() {
         // continue to trace the obstacle depending on the value of tracing.
 
   // Real Code:
-
   int tar_x = target_coords[current_target * 2];
   int tar_y = target_coords[current_target * 2 + 1];
 
