@@ -121,11 +121,11 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 
 // Define logical variables.
 
-int [10] target_coords = {};
+int [10] target_coords = {1000, 150, 500, 150, 100, 150, 1700, 250};
 int current_target = 0;
 int tracing = 0;
 
-int arrival_tolerance = 0;
+int arrival_tolerance = 10;
 int proximity_tolerance = 4;
 
 int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
@@ -151,24 +151,34 @@ void loop() {
   delimIndex = payload.indexOf(']');
   testCollector[count++] = payload.substring(prevIndex+1, delimIndex).toInt();
    
-  int x, y; 
+  int x, y, tar_x, tar_y; 
   //Robot location x,y from MQTT subscription variable testCollector 
   x = testCollector[0];
   y = testCollector[1];
+  tar_x = target_coords[current_target * 2];
+  tar_y = target_coords[current_target * 2 + 1];
 
   // OLED controls
   char temp1[50];
   char temp2[50];
+  char temp3[50];
+  char temp4[50];
   sprintf(temp1, "%d", x);
   sprintf(temp2, "%d", y);
+  sprintf(temp3, "%d", tar_x);
+  sprintf(temp4, "%d", tar_y);
   const char *c = temp1;
   const char *d = temp2;
+  const char *e = temp3;
+  const char *f = temp4;
   display.clear();
-  display.drawString(0, 0, "x-coordinate");
-  display.drawString(80, 0, c);
-  display.drawString(0, 16, "y-coordinate");
-  display.drawString(80, 16, d);
-  display.drawString(0, 45, ":)");
+  display.drawString(0, 0, "x: ");
+  display.drawString(20, 0, c);
+  display.drawString(40, 0, "y: ");
+  display.drawString(60, 0, d);
+  display.drawString(0, 16, "Heading to:");
+  display.drawString(0, 32, e);
+  display.drawString(40, 32, f);
   display.display();
   
   // Serial monitor controls
@@ -199,8 +209,6 @@ void loop() {
         // continue to trace the obstacle depending on the value of tracing.
 
   // Real Code:
-  int tar_x = target_coords[current_target * 2];
-  int tar_y = target_coords[current_target * 2 + 1];
 
   if (coords_overlap(x, y, tar_x, tar_y))
   {
