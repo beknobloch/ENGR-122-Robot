@@ -201,7 +201,9 @@ void loop() {
   int tar_x = target_coords[current_target * 2];
   int tar_y = target_coords[current_target * 2 + 1];
 
-  if (coords_overlap(c, d, tar_x, tar_y))
+  int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means reverse, 2 means forward.
+
+  if (coords_overlap(x, y, tar_x, tar_y))
   {
     current_target++;
     // Calculate and point robot towards next target.
@@ -218,8 +220,8 @@ void loop() {
       {
         if (pass < proximity_tolerance)
         {
-          bool choose_direction = driver < pass;
           // Turn to the direction with the further distance.
+          driver < pass ? motor_control = -1 : motor_control = 1;
           // Set tracing to appropriate value.
         } else
         {
@@ -242,5 +244,20 @@ void loop() {
   {
     
   }
-  
+
+  // Motor control
+  switch (motor_control)
+  {
+    case -2:
+      break;
+    case -1:
+      break;
+    case 0:
+      break;
+    case 1:
+      break;
+    case 2:
+      break;
+  }
+
 }
