@@ -106,16 +106,19 @@ void setup() {
   delay(3000);
 }
 
-double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
+double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
   int dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
   int ab = sqrt((x_two - x_one) ** 2 + (y_two - y_one) ** 2) * sqrt((x_target - x_two) ** 2 + (y_target - y_two) ** 2);
   return arccos(dot / ab);
 }
 
-int angle_value_to_motor_values(double angle) {
+void turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values.
+  motor1.write(120);
+  motor2.write(0);
+  delay(4.45 * angle);
 
 }
 
@@ -213,19 +216,21 @@ void loop() {
 
   // Real Code:
 
+  double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
+
   if (coords_overlap(x, y, tar_x, tar_y))
   {
     current_target++;
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
-    // Calculate and point robot towards next target.
+    turn_with_angle(angle);
     tracing = 0;
   }
+  double center = ultrasonic_center.read(INC);
+  double pass = ultrasonic_pass.read(INC);
+  double driver = ultrasonic_driver.read(INC);
   if (tracing == 0)
   {
-    double center = ultrasonic_center.read(INC);
-    double pass = ultrasonic_pass.read(INC);
-    double driver = ultrasonic_driver.read(INC);
     if (center < proximity_tolerance)
     {
       if (driver < proximity_tolerance)
@@ -260,21 +265,76 @@ void loop() {
     }
   } else  // tracing != 0
   {
-    
+    if (angle < 5)
+    {
+      tracing = 0;
+    } else
+    {
+      if (tracing == -1)  // Trace left side
+      {
+        if (driver > 1.5 * proximity_tolerance)
+        {
+          motor1.write(50);
+          motor2.write(0);
+          delay(10);
+        } else if (driver < proximity_tolerance)
+        {
+          motor1.write(0);
+          motor2.write(50);
+          delay(10);
+        } else
+        {
+          motor_control = 2;
+          recorded_x = x;
+          recorded_y = y;
+        }
+      } else if (tracing == 1)  // Trace right side
+      {
+        if (pass > 1.5 * proximity_tolerance)
+        {
+          motor1.write(0);
+          motor2.write(50);
+          delay(10);
+        } else if (pass < proximity_tolerance)
+        {
+          motor1.write(50);
+          motor2.write(0);
+          delay(10);
+        } else
+        {
+          motor_control = 2;
+          recorded_x = x;
+          recorded_y = y;
+        }
+      }
+    }
   }
 
   // Motor control
   switch (motor_control)
   {
     case -2:
+      motor1.write(120);
+      motor2.write(0);
+      delay(800);
       break;
     case -1:
+      motor1.write(120);
+      motor2.write(0);
+      delay(400);
       break;
     case 0:
+      motor1.write(90);
+      motor2.write(90);
       break;
     case 1:
+      motor1.write(0);
+      motor2.write(120);
+      delay(400);
       break;
     case 2:
+      motor1.write(0);
+      motor2.write(0);
       break;
   }
 
