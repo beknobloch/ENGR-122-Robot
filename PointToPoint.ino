@@ -102,6 +102,8 @@ void setup() {
   display.setFont(Arial_MT_Plain_16);
   display.drawString(0, 0, "Initializing");
   display.display();
+
+  delay(3000);
 }
 
 double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two)  return atan2(y_two - y_one, x_two - x_one);
