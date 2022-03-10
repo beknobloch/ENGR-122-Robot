@@ -106,9 +106,11 @@ void setup() {
   delay(3000);
 }
 
-double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two)
+double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
-  
+  int dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
+  int ab = sqrt((x_two - x_one) ** 2 + (y_two - y_one) ** 2) * sqrt((x_target - x_two) ** 2 + (y_target - y_two) ** 2);
+  return arccos(dot / ab);
 }
 
 int angle_value_to_motor_values(double angle) {
