@@ -106,7 +106,10 @@ void setup() {
   delay(3000);
 }
 
-double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two)  return atan2(y_two - y_one, x_two - x_one);
+double pair_of_points_to_angle_value(int x_one, int y_one, int x_two, int y_two)
+{
+  
+}
 
 int angle_value_to_motor_values(double angle) {
 
@@ -126,6 +129,7 @@ int arrival_tolerance = 10;
 int proximity_tolerance = 4;
 
 int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
+int recorded_x, recorded_y = 100, 650;
 
 void loop() {
   //subscribe the data from MQTT server
@@ -249,6 +253,8 @@ void loop() {
     {
       // Move forward a little bit.
       motor_control = 2;
+      recorded_x = x;
+      recorded_y = y;
     }
   } else  // tracing != 0
   {
