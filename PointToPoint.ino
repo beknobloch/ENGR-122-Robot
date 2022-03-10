@@ -109,7 +109,7 @@ void setup() {
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
   int dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
-  int ab = sqrt((x_two - x_one) ** 2 + (y_two - y_one) ** 2) * sqrt((x_target - x_two) ** 2 + (y_target - y_two) ** 2);
+  int ab = sqrt(pow(x_two - x_one, 2) + pow(y_two - y_one, 2)) * sqrt(pow(x_target - x_two, 2) + pow(y_target - y_two, 2));
   return arccos(dot / ab);
 }
 
@@ -122,7 +122,7 @@ void turn_with_angle(double angle) {
 
 }
 
-bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)  return ((x_two - x_one) ** 2 + (y_two - y_one) ** 2) ** 0.5 < tolerance;
+bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)  return sqrt(pow(x_two - x_one, 2) + pow(y_two - y_one, 2)) < tolerance;
 
 // Define logical variables.
 
