@@ -235,7 +235,7 @@ void loop() {
         // Turn to the driver's side.
         motor_control = -1;
         tracing = -1;
-      } else
+      } else    // Central obstacle, but no obstacle to sides.
       {
         // Turn to the direction with the further distance.
         pass < driver ? motor_control = -1 : motor_control = 1;
