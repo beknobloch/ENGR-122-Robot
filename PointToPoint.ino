@@ -210,6 +210,8 @@ void loop() {
   if (coords_overlap(x, y, tar_x, tar_y))
   {
     current_target++;
+    tar_x = target_coords[current_target * 2];
+    tar_y = target_coords[current_target * 2 + 1];
     // Calculate and point robot towards next target.
     tracing = 0;
   }
