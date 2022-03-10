@@ -112,10 +112,7 @@ int angle_value_to_motor_values(double angle) {
 
 }
 
-bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
-{
-  return ((x_two - x_one) ** 2 + (y_two - y_one) ** 2) ** 0.5 < tolerance;
-}
+bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)  return ((x_two - x_one) ** 2 + (y_two - y_one) ** 2) ** 0.5 < tolerance;
 
 // Define logical variables.
 
