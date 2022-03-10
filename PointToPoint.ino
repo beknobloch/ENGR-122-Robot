@@ -201,7 +201,7 @@ void loop() {
   int tar_x = target_coords[current_target * 2];
   int tar_y = target_coords[current_target * 2 + 1];
 
-  int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means reverse, 2 means forward.
+  int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
 
   if (coords_overlap(x, y, tar_x, tar_y))
   {
@@ -221,24 +221,28 @@ void loop() {
         if (pass < proximity_tolerance)
         {
           // Turn to the direction with the further distance.
-          driver < pass ? motor_control = -1 : motor_control = 1;
+          pass < driver ? motor_control = -1 : motor_control = 1;
           // Set tracing to appropriate value.
         } else
         {
           // Turn to the driver's side.
+          motor_control = -1;
           tracing = -1;
         }
       } else if (pass < proximity_tolerance)
       {
         // Turn to the passenger's side.
+        motor_control = 1;
         tracing = 1;
       } else
       {
         // Turn around.
+        motor_control = -2;
       }
     } else  // No central obstacle detected.
     {
       // Move forward a little bit.
+      motor_control = 2;
     }
   } else  // tracing != 0
   {
