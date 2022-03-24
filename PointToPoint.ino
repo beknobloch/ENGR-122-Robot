@@ -119,12 +119,12 @@ void turn_with_angle(double angle) {
   
   if (angle < 0)
   {
-    motor1.write(120);
-    motor2.write(0);
-    angle = -1 * angle;
-  } else {
     motor1.write(0);
     motor2.write(120);
+    angle = -1 * angle;
+  } else {
+    motor1.write(120);
+    motor2.write(0);
   }
  
  
