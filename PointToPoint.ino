@@ -252,7 +252,7 @@ void loop() {
   double driver = ultrasonic_driver.read(INC);
   if (tracing == 0)
   {
-    if (center < proximity_tolerance || driver < (proximity_tolerance - 1) || pass < (proximity_tolerance - 1))
+    if (center < proximity_tolerance || driver < proximity_tolerance || pass < proximity_tolerance)
     {
       if (driver < proximity_tolerance)
       {
