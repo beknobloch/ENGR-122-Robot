@@ -1,10 +1,10 @@
 /*------------------------------------------------------------------------------------------
- * Ver. 1 - 02/24/2022
- * This program is the sample code used for the 7th week lecture in the 2022 Spring semester. 
- * Week7: "Using LiDAR sensor information using MQTT protocol."
+ * Final Target-to-Target Program
+ * ENGR 122 - Group 4
+ * Professor Miles
  * 
- * Based on this sample code, students should write additional commands to output robot position 
- * information using OLED Display and Serial Monitor.                      -SES IDEAs Program-
+ *  
+ * 
  -------------------------------------------------------------------------------------------*/
  
 #include <ESP8266WiFi.h>  
