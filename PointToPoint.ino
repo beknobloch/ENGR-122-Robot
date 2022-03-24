@@ -110,7 +110,8 @@ double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_t
 {
   int dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
   int ab = sqrt(pow(x_two - x_one, 2) + pow(y_two - y_one, 2)) * sqrt(pow(x_target - x_two, 2) + pow(y_target - y_two, 2));
-  return arccos(dot / ab);
+  if (ab != 0) return arccos(dot / ab);
+  else return 0;
 }
 
 void turn_with_angle(double angle) {
