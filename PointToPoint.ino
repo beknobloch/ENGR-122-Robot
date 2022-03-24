@@ -116,6 +116,8 @@ double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_t
 void turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values. If < 0, turn right. If > 0, turn left.
+ 
+  int angle_to_turn_coefficient = 4.45;
   
   if (angle < 0)
   {
@@ -127,7 +129,7 @@ void turn_with_angle(double angle) {
     motor2.write(0);
   }
  
-  delay(4.45 * angle);
+  delay(angle_to_turn_coefficient * angle);
 
 }
 
