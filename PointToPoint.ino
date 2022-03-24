@@ -252,7 +252,7 @@ void loop() {
   double driver = ultrasonic_driver.read(INC);
   if (tracing == 0)
   {
-    if (center < proximity_tolerance)
+    if (center < proximity_tolerance || driver < (proximity_tolerance - 1) || pass < (proximity_tolerance - 1))
     {
       if (driver < proximity_tolerance)
       {
@@ -277,7 +277,7 @@ void loop() {
         pass < driver ? motor_control = -1 : motor_control = 1;
         pass < driver ? tracing = -1 : tracing = 1;
       }
-    } else  // No central obstacle detected.
+    } else  // No upcoming obstacle detected.
     {
       // Move forward a little bit.
       motor_control = 2;
