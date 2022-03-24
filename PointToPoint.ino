@@ -121,12 +121,11 @@ void turn_with_angle(double angle) {
   {
     motor1.write(0);
     motor2.write(120);
-    angle = -1 * angle;
+    angle *= -1;
   } else {
     motor1.write(120);
     motor2.write(0);
   }
- 
  
   delay(4.45 * angle);
 
