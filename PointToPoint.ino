@@ -232,6 +232,11 @@ void loop() {
   if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
   {
     current_target++;
+    if (current_target == 4)
+    {
+      // END!
+      delay(100000000);
+    }
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
     turn_with_angle(angle);
