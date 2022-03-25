@@ -108,8 +108,8 @@ void setup() {
 
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
-  int dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
-  int ab = sqrt(pow(x_two - x_one, 2) + pow(y_two - y_one, 2)) * sqrt(pow(x_target - x_two, 2) + pow(y_target - y_two, 2));
+  double dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
+  double ab = sqrt(pow(x_two - x_one, 2) + pow(y_two - y_one, 2)) * sqrt(pow(x_target - x_two, 2) + pow(y_target - y_two, 2));
   if (ab != 0) return acos(dot / ab);
   else return 0;
 }
@@ -118,7 +118,7 @@ void turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values. If < 0, turn right. If > 0, turn left.
  
-  int angle_to_turn_coefficient = 4.45;
+  double angle_to_turn_coefficient = 0.15;
   
   if (angle < 0)
   {
@@ -173,8 +173,8 @@ void loop() {
   //Robot location x,y from MQTT subscription variable testCollector 
   x = testCollector[0];
   y = testCollector[1];
-  tar_x = 10000;
-  tar_y = 4000;
+  tar_x = 1000;
+  tar_y = 200;
 
   // OLED controls
   char temp1[50];
@@ -213,15 +213,25 @@ void loop() {
       // Record location and drive forward briefly.
       recorded_x = x;
       recorded_y = y;
+
+      Serial.print("Recording current position: ");
+      Serial.print(x);
+      Serial.print(", ");
+      Serial.println(y);
       
       motor1.write(0);
       motor2.write(0);
 
       delay(1000);
       break;
-    case 2:
+    case 1:
       // Use new position to turn to target and drive there.
+
+      Serial.println("Turning to where I think the target is.");
+      
       double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
+      Serial.print("Angle value: ");
+      Serial.print(angle);
       turn_with_angle(angle);
   }
 
