@@ -210,6 +210,13 @@ void loop() {
   switch (loop_iteration)
   {
     case 0:
+      // Check if arrived at target. If so, stop for a long time.
+      if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
+      {
+        Serial.print("We're here!");
+        delay(100000);
+      }
+    
       // Record location and drive forward briefly.
       recorded_x = x;
       recorded_y = y;
