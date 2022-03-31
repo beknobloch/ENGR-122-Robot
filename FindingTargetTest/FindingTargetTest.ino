@@ -108,28 +108,40 @@ void setup() {
 
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
-  double dot = (x_two - x_one) * (x_target - x_two) + (y_two - y_one) * (y_target - y_two);
-  double ab = sqrt(pow(x_two - x_one, 2) + pow(y_two - y_one, 2)) * sqrt(pow(x_target - x_two, 2) + pow(y_target - y_two, 2));
-  if (ab != 0) return acos(dot / ab);
-  else return 0;
+  double angle_to_return, u_1, u_2, v_1, v_2;
+  u_1 = x_two - x_one;
+  u_2 = y_two - y_one;
+  v_1 = x_target - x_two;
+  v_2 = y_target - y_two;
+  
+  double dot = (u_1 * v_1) + (u_2 * v_2);
+  double ab = sqrt(pow(u_1, 2) + pow(u_2, 2)) * sqrt(pow(v_1, 2) + pow(v_2, 2));
+  
+  if (ab != 0) angle_to_return = acos(dot / ab);
+  else angle_to_return = 0;
+
+  // Implement direction
+  if ((u_1 * v_1) > (u_2 * v_2))  angle_to_return *= 1;
+
+  return angle_to_return;
 }
 
 void turn_with_angle(double angle) {
 
-  // Add code for converting an angle into appropriate motor values. If < 0, turn right. If > 0, turn left.
+  // Add code for converting an angle into appropriate motor values. If < 0, turn left. If > 0, turn right.
  
   double angle_to_turn_coefficient = 0.15;
   
   if (angle < 0)
   {
-    Serial.println("I'm turning right.");
-    motor1.write(0);
-    motor2.write(120);
-    angle *= -1;
-  } else {
     Serial.println("I'm turning left.");
     motor1.write(120);
     motor2.write(0);
+    angle *= -1;
+  } else {
+    Serial.println("I'm turning right.");
+    motor1.write(0);
+    motor2.write(120);
   }
 
   Serial.println("Turning with calculated delay.");
@@ -218,7 +230,11 @@ void loop() {
   Serial.print("y-coordinate: ");
   Serial.println(d);
   Serial.println("\n");
-  
+
+  Serial.println("\nANGLE TEST 1: ");
+  Serial.println(points_to_angle_value(0, 0, 500, 500, 500, 0));
+  Serial.println("\nANGLE TEST 2: ");
+  Serial.println(points_to_angle_value(0, 0, 500, 500, 0, 500));
 
   switch (loop_iteration)
   {
