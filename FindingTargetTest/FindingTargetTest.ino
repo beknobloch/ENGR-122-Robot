@@ -121,7 +121,7 @@ double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_t
   else angle_to_return = 0;
 
   // Implement direction
-  if ((u_1 * v_1) > (u_2 * v_2))  angle_to_return *= -1;
+  if ((u_1 * v_1) < (u_2 * v_2))  angle_to_return *= -1;
 
   return angle_to_return;
 }
