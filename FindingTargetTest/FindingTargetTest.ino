@@ -36,7 +36,7 @@ boolean flag_payload;
 const char* mqtt_server = "155.246.62.110";   //MQTT Broker(Server) Address
 const char* MQusername = "jojo";              //MQTT username
 const char* MQpassword = "hereboy";           //MQTT password
-const char* MQtopic = "louis_lidar1";         //MQTT Topic for Arena_1 (EAS011 - South)
+const char* MQtopic = "louis_lidar2";         //MQTT Topic for Arena_1 (EAS011 - South)
 const int mqtt_port = 1883;                   //MQTT port#
 
 //Stevens WiFi Setting variables
@@ -170,7 +170,6 @@ void loop() {
   while( (delimIndex = payload.indexOf(',', prevIndex +1) ) != -1){
     testCollector[count++] = payload.substring(prevIndex+1, delimIndex).toInt();
     prevIndex = delimIndex;
-    delay(2000);
   }
   delay(1000);
   delimIndex = payload.indexOf(']');
