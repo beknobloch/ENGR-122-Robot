@@ -160,7 +160,7 @@ void loop() {
     reconnect();
   }
   client.loop();                              
-  
+
   String payload(payload_global);              
   int testCollector[10];                      
   int count = 0;
@@ -179,6 +179,13 @@ void loop() {
   //Robot location x,y from MQTT subscription variable testCollector 
   x = testCollector[0];
   y = testCollector[1];
+
+  Serial.println("Read the location on the screen.");
+  Serial.print("Is this right?:  ");
+  Serial.print(x);
+  Serial.print(", ");
+  Serial.println(y);
+  
   tar_x = 800;
   tar_y = 600;
 
@@ -219,7 +226,7 @@ void loop() {
       // Check if arrived at target. If so, stop for a long time.
       if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
       {
-        Serial.print("We're here!");
+        Serial.println("We're here!");
         delay(100000);
       }
     
@@ -237,12 +244,22 @@ void loop() {
 
       delay(1000);
 
-      motor1.write(0);
-      motor2.write(0);
+      motor1.write(90);
+      motor2.write(90);
+
+      Serial.print("Recorded coordinates: ");
+      Serial.print(recorded_x);
+      Serial.print(", ");
+      Serial.println(recorded_y);
       
       break;
     case 1:
       // Use new position to turn to target and drive there.
+
+      Serial.print("\nCurrent coordinates: ");
+      Serial.print(x);
+      Serial.print(", ");
+      Serial.println(y);
 
       Serial.println("Turning to where I think the target is.");
       
