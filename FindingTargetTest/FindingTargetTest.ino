@@ -122,15 +122,20 @@ void turn_with_angle(double angle) {
   
   if (angle < 0)
   {
+    Serial.println("I'm turning right.");
     motor1.write(0);
     motor2.write(120);
     angle *= -1;
   } else {
+    Serial.println("I'm turning left.");
     motor1.write(120);
     motor2.write(0);
   }
- 
+
+  Serial.println("Turning with calculated delay.");
   delay(angle_to_turn_coefficient * angle);
+  motor1.write(90);
+  motor2.write(90);
 
 }
 
@@ -165,7 +170,9 @@ void loop() {
   while( (delimIndex = payload.indexOf(',', prevIndex +1) ) != -1){
     testCollector[count++] = payload.substring(prevIndex+1, delimIndex).toInt();
     prevIndex = delimIndex;
+    delay(2000);
   }
+  delay(1000);
   delimIndex = payload.indexOf(']');
   testCollector[count++] = payload.substring(prevIndex+1, delimIndex).toInt();
    
@@ -173,8 +180,8 @@ void loop() {
   //Robot location x,y from MQTT subscription variable testCollector 
   x = testCollector[0];
   y = testCollector[1];
-  tar_x = 1000;
-  tar_y = 200;
+  tar_x = 800;
+  tar_y = 600;
 
   // OLED controls
   char temp1[50];
@@ -230,6 +237,10 @@ void loop() {
       motor2.write(0);
 
       delay(1000);
+
+      motor1.write(0);
+      motor2.write(0);
+      
       break;
     case 1:
       // Use new position to turn to target and drive there.
@@ -237,9 +248,11 @@ void loop() {
       Serial.println("Turning to where I think the target is.");
       
       double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
-      Serial.print("Angle value: ");
-      Serial.print(angle);
+      Serial.print("Calculate angle value in radians: ");
+      Serial.println(angle);
       turn_with_angle(angle);
+
+      break;
   }
 
   loop_iteration++;
