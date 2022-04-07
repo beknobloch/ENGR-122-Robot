@@ -126,11 +126,11 @@ double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_t
   return angle_to_return;
 }
 
-void turn_with_angle(double angle) {
+int turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values. If < 0, turn left. If > 0, turn right.
  
-  double angle_to_turn_coefficient = 0.15;
+  double angle_to_turn_coefficient = 3*180;
   
   if (angle < 0)
   {
@@ -145,9 +145,7 @@ void turn_with_angle(double angle) {
   }
 
   Serial.println("Turning with calculated delay.");
-  delay(angle_to_turn_coefficient * angle);
-  motor1.write(90);
-  motor2.write(90);
+  return int(angle_to_turn_coefficient * angle);
 
 }
 
@@ -166,12 +164,13 @@ int recorded_y = 650;
 int loop_iteration = 0;
 
 void loop() {
+
   //subscribe the data from MQTT server
   if (!client.connected()) {
     Serial.print("...");
     reconnect();
   }
-  client.loop();                              
+  client.loop();  
 
   String payload(payload_global);              
   int testCollector[10];                      
@@ -189,6 +188,7 @@ void loop() {
    
   int x, y, tar_x, tar_y; 
   //Robot location x,y from MQTT subscription variable testCollector 
+  
   x = testCollector[0];
   y = testCollector[1];
 
@@ -198,8 +198,8 @@ void loop() {
   Serial.print(", ");
   Serial.println(y);
   
-  tar_x = 800;
-  tar_y = 600;
+  tar_x = 500;
+  tar_y = 150;
 
   // OLED controls
   char temp1[50];
@@ -255,13 +255,15 @@ void loop() {
       Serial.print(", ");
       Serial.println(y);
       
-      motor1.write(0);
-      motor2.write(0);
+      motor1.write(65);
+      motor2.write(65);
 
-      delay(1000);
+      delay(100);
 
       motor1.write(90);
       motor2.write(90);
+    
+      delay(100);
 
       Serial.print("Recorded coordinates: ");
       Serial.print(recorded_x);
@@ -271,7 +273,7 @@ void loop() {
       break;
     case 1:
       // Use new position to turn to target and drive there.
-
+      
       Serial.print("\nCurrent coordinates: ");
       Serial.print(x);
       Serial.print(", ");
@@ -280,9 +282,13 @@ void loop() {
       Serial.println("Turning to where I think the target is.");
       
       double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
-      Serial.print("Calculate angle value in radians: ");
+      Serial.print("Calculated angle value in radians: ");
       Serial.println(angle);
-      turn_with_angle(angle);
+      delay(turn_with_angle(angle));
+      motor1.write(90);
+      motor2.write(90);
+    
+      delay(100);
 
       break;
   }
