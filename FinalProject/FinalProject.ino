@@ -36,7 +36,7 @@ boolean flag_payload;
 const char* mqtt_server = "155.246.62.110";   //MQTT Broker(Server) Address
 const char* MQusername = "jojo";              //MQTT username
 const char* MQpassword = "hereboy";           //MQTT password
-const char* MQtopic = "louis_lidar2";         //MQTT Topic for Arena_1 (EAS011 - North)
+const char* MQtopic = "louis_lidar1";         //MQTT Topic for Arena_1 (EAS011 - South)
 const int mqtt_port = 1883;                   //MQTT port#
 
 //Stevens WiFi Setting variables
@@ -145,6 +145,12 @@ int turn_with_angle(double angle) {
   }
 
   Serial.println("Turning with calculated delay.");
+
+  delay(angle_to_turn_coefficient * angle);
+
+  motor1.write(90);
+  motor2.write(90);
+
   return int(angle_to_turn_coefficient * angle);
 
 }
@@ -156,22 +162,25 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 
 // Define logical variables.
 
-int arrival_tolerance = 10;
+int target_coords [8] = {1000, 150, 500, 150, 100, 150, 1700, 250};
+int current_target = 0;
+int tracing = 0;
 
+int arrival_tolerance = 10;
+int proximity_tolerance = 4;
+
+int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
 int recorded_x = 100;
 int recorded_y = 650;
 
-int loop_iteration = 0;
-
 void loop() {
-
   //subscribe the data from MQTT server
   if (!client.connected()) {
     Serial.print("...");
     reconnect();
   }
-  client.loop();  
-
+  client.loop();                              
+  
   String payload(payload_global);              
   int testCollector[10];                      
   int count = 0;
@@ -182,24 +191,15 @@ void loop() {
     testCollector[count++] = payload.substring(prevIndex+1, delimIndex).toInt();
     prevIndex = delimIndex;
   }
-  delay(1000);
   delimIndex = payload.indexOf(']');
   testCollector[count++] = payload.substring(prevIndex+1, delimIndex).toInt();
    
   int x, y, tar_x, tar_y; 
   //Robot location x,y from MQTT subscription variable testCollector 
-  
   x = testCollector[0];
   y = testCollector[1];
-
-  Serial.println("Read the location on the screen.");
-  Serial.print("Is this right?:  ");
-  Serial.print(x);
-  Serial.print(", ");
-  Serial.println(y);
-  
-  tar_x = 500;
-  tar_y = 150;
+  tar_x = target_coords[current_target * 2];
+  tar_y = target_coords[current_target * 2 + 1];
 
   // OLED controls
   char temp1[50];
@@ -230,64 +230,155 @@ void loop() {
   Serial.print("y-coordinate: ");
   Serial.println(d);
   Serial.println("\n");
+  
 
-  switch (loop_iteration)
+  // PSEUDOCODE:
+    // If on_current_target:
+      // set target to the next target in the array.
+      // Calculate and point robot towards next target.
+      // tracing = 0;    <-- This indicates the robot is not navigating around ("tracing") an obstacle.
+    // If tracing == 0:
+      // If the center sensor detects an obstacle:
+        // Check which peripheral sensor reports a further distance.
+        // Turn in that direction until the center sensor no longer detects an obstacle.
+        // turned_left ? tracing = -1 : tracing = 1;    <-- Left corresponds to -1, right to 1;
+      // Else:
+        // Move forward.
+    // Else:
+      // Calculate the direction towards the next target.
+      // If currently pointing in that direction:
+        // tracing = 0;
+      // Else:
+        // continue to trace the obstacle depending on the value of tracing.
+
+  // Real Code:
+
+  double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
+
+  if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
   {
-    case 0:
-      // Check if arrived at target. If so, stop for a long time.
-      if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
+    current_target++;
+    if (current_target == 4)
+    {
+      // END!
+      delay(100000000);
+    }
+    tar_x = target_coords[current_target * 2];
+    tar_y = target_coords[current_target * 2 + 1];
+    turn_with_angle(angle);
+    tracing = 0;
+  }
+  double center = ultrasonic_center.read(INC);
+  double pass = ultrasonic_pass.read(INC);
+  double driver = ultrasonic_driver.read(INC);
+  if (tracing == 0)
+  {
+    if (center < proximity_tolerance || driver < proximity_tolerance || pass < proximity_tolerance)
+    {
+      if (driver < proximity_tolerance)
       {
-        Serial.println("We're here!");
-        delay(100000);
+        if (pass < proximity_tolerance)
+        {
+          // Turn around.
+          motor_control = -2;
+        } else
+        {
+          // Turn to the passenger's side.
+          motor_control = 1;
+          tracing = 1;
+        }
+      } else if (pass < proximity_tolerance)
+      {
+        // Turn to the driver's side.
+        motor_control = -1;
+        tracing = -1;
+      } else    // Central obstacle, but no obstacle to sides.
+      {
+        // Turn to the direction with the further distance.
+        pass < driver ? motor_control = -1 : motor_control = 1;
+        pass < driver ? tracing = -1 : tracing = 1;
       }
-    
-      // Record location and drive forward briefly.
+    } else  // No upcoming obstacle detected.
+    {
+      // Move forward a little bit.
+      motor_control = 2;
       recorded_x = x;
       recorded_y = y;
+    }
+  } else  // tracing != 0
+  {
+    if (angle < 5)
+    {
+      tracing = 0;
+    } else
+    {
+      if (tracing == -1)  // Trace left side
+      {
+        if (driver > 1.5 * proximity_tolerance)
+        {
+          motor1.write(50);
+          motor2.write(0);
+          delay(10);
+        } else if (driver < proximity_tolerance)
+        {
+          motor1.write(0);
+          motor2.write(50);
+          delay(10);
+        } else
+        {
+          motor_control = 2;
+          recorded_x = x;
+          recorded_y = y;
+        }
+      } else if (tracing == 1)  // Trace right side
+      {
+        if (pass > 1.5 * proximity_tolerance)
+        {
+          motor1.write(0);
+          motor2.write(50);
+          delay(10);
+        } else if (pass < proximity_tolerance)
+        {
+          motor1.write(50);
+          motor2.write(0);
+          delay(10);
+        } else
+        {
+          motor_control = 2;
+          recorded_x = x;
+          recorded_y = y;
+        }
+      }
+    }
+  }
 
-      Serial.print("Recording current position: ");
-      Serial.print(x);
-      Serial.print(", ");
-      Serial.println(y);
-      
-      motor1.write(65);
-      motor2.write(65);
-
-      delay(100);
-
+  // Motor control
+  switch (motor_control)
+  {
+    case -2:
+      motor1.write(120);
+      motor2.write(0);
+      delay(800);
+      break;
+    case -1:
+      motor1.write(120);
+      motor2.write(0);
+      delay(200);
+      break;
+    case 0:
       motor1.write(90);
       motor2.write(90);
-    
-      delay(100);
-
-      Serial.print("Recorded coordinates: ");
-      Serial.print(recorded_x);
-      Serial.print(", ");
-      Serial.println(recorded_y);
-      
       break;
     case 1:
-      // Use new position to turn to target and drive there.
-      
-      Serial.print("\nCurrent coordinates: ");
-      Serial.print(x);
-      Serial.print(", ");
-      Serial.println(y);
-
-      Serial.println("Turning to where I think the target is.");
-      
-      double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
-      Serial.print("Calculated angle value in radians: ");
-      Serial.println(angle);
-      delay(turn_with_angle(angle));
-      motor1.write(90);
-      motor2.write(90);
-    
-      delay(100);
-
+      motor1.write(0);
+      motor2.write(120);
+      delay(200);
+      break;
+    case 2:
+      motor1.write(0);
+      motor2.write(0);
+      delay(400);
       break;
   }
 
-  loop_iteration++;
-  loop_iteration = loop_iteration % 2;
 }
