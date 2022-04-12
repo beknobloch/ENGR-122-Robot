@@ -162,12 +162,13 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 
 // Define logical variables.
 
-int target_coords [8] = {1000, 150, 500, 150, 100, 150, 1700, 250};
+int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700};
 int current_target = 0;
 int tracing = 0;
 
 int arrival_tolerance = 10;
 int proximity_tolerance = 4;
+bool reorient = false;
 
 int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
 int recorded_x = 100;
@@ -230,28 +231,9 @@ void loop() {
   Serial.print("y-coordinate: ");
   Serial.println(d);
   Serial.println("\n");
-  
 
-  // PSEUDOCODE:
-    // If on_current_target:
-      // set target to the next target in the array.
-      // Calculate and point robot towards next target.
-      // tracing = 0;    <-- This indicates the robot is not navigating around ("tracing") an obstacle.
-    // If tracing == 0:
-      // If the center sensor detects an obstacle:
-        // Check which peripheral sensor reports a further distance.
-        // Turn in that direction until the center sensor no longer detects an obstacle.
-        // turned_left ? tracing = -1 : tracing = 1;    <-- Left corresponds to -1, right to 1;
-      // Else:
-        // Move forward.
-    // Else:
-      // Calculate the direction towards the next target.
-      // If currently pointing in that direction:
-        // tracing = 0;
-      // Else:
-        // continue to trace the obstacle depending on the value of tracing.
 
-  // Real Code:
+  // ALGORITHM
 
   double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
 
@@ -271,79 +253,46 @@ void loop() {
   double center = ultrasonic_center.read(INC);
   double pass = ultrasonic_pass.read(INC);
   double driver = ultrasonic_driver.read(INC);
-  if (tracing == 0)
+
+  if (reorient)
   {
-    if (center < proximity_tolerance || driver < proximity_tolerance || pass < proximity_tolerance)
-    {
-      if (driver < proximity_tolerance)
+      turn_with_angle(angle);
+      reorient = false;
+  }
+  
+  if (center < proximity_tolerance)
+  {
+      if (driver > pass)                                                    // Left.
       {
-        if (pass < proximity_tolerance)
-        {
-          // Turn around.
-          motor_control = -2;
-        } else
-        {
-          // Turn to the passenger's side.
+          motor_control = -1;
+      }
+      else                                                                  // Right.
+      {
           motor_control = 1;
-          tracing = 1;
-        }
-      } else if (pass < proximity_tolerance)
-      {
-        // Turn to the driver's side.
-        motor_control = -1;
-        tracing = -1;
-      } else    // Central obstacle, but no obstacle to sides.
-      {
-        // Turn to the direction with the further distance.
-        pass < driver ? motor_control = -1 : motor_control = 1;
-        pass < driver ? tracing = -1 : tracing = 1;
       }
-    } else  // No upcoming obstacle detected.
-    {
-      // Move forward a little bit.
-      motor_control = 2;
-    }
-  } else  // tracing != 0
+  }
+  else if (pass < proximity_tolerance || driver < proximity_tolerance)
   {
-    if (angle < 5)
-    {
-      tracing = 0;
-    } else
-    {
-      if (tracing == -1)  // Trace left side
+      if (!(pass < proximity_tolerance))                                    // Slight right turn.
       {
-        if (driver > 1.5 * proximity_tolerance)
-        {
-          motor1.write(50);
-          motor2.write(0);
-          delay(10);
-        } else if (driver < proximity_tolerance)
-        {
           motor1.write(0);
-          motor2.write(50);
-          delay(10);
-        } else
-        {
-          motor_control = 2;
-        }
-      } else if (tracing == 1)  // Trace right side
-      {
-        if (pass > 1.5 * proximity_tolerance)
-        {
-          motor1.write(0);
-          motor2.write(50);
-          delay(10);
-        } else if (pass < proximity_tolerance)
-        {
-          motor1.write(50);
-          motor2.write(0);
-          delay(10);
-        } else
-        {
-          motor_control = 2;
-        }
+          motor2.write(120);
+          delay(100);
       }
-    }
+      else if (!(driver < proximity_tolerance))                             // Slight left turn.
+      {
+          motor1.write(120);
+          motor2.write(0);
+          delay(100);
+      } else                                                                // U-turn
+      {
+          motor_control = -2;
+      }
+  }
+  else                                                                      // Forward.
+  {
+      motor_control = 2;
+      
   }
 
   recorded_x = x;
@@ -360,7 +309,7 @@ void loop() {
     case -1:
       motor1.write(120);
       motor2.write(0);
-      delay(200);
+      delay(500);
       break;
     case 0:
       motor1.write(90);
@@ -370,12 +319,13 @@ void loop() {
     case 1:
       motor1.write(0);
       motor2.write(120);
-      delay(200);
+      delay(500);
       break;
     case 2:
       motor1.write(0);
       motor2.write(0);
       delay(400);
+      reorient = true;
       break;
   }
 
