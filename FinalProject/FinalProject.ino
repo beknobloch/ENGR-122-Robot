@@ -36,7 +36,7 @@ boolean flag_payload;
 const char* mqtt_server = "155.246.62.110";   //MQTT Broker(Server) Address
 const char* MQusername = "jojo";              //MQTT username
 const char* MQpassword = "hereboy";           //MQTT password
-const char* MQtopic = "louis_lidar1";         //MQTT Topic for Arena_1 (EAS011 - South)
+const char* MQtopic = "louis_lidar2";         //MQTT Topic for Arena_1 (EAS011 - South)
 const int mqtt_port = 1883;                   //MQTT port#
 
 //Stevens WiFi Setting variables
@@ -104,6 +104,16 @@ void setup() {
   display.display();
 
   delay(3000);
+}
+
+void oled_debug(char * statement, char * statement_one)
+{
+  // OLED controls
+  display.clear();
+  display.drawString(0, 0, "DEBUG:");
+  display.drawString(0, 16, statement);
+  display.drawString(0, 32, statement_one);
+  display.display();
 }
 
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
@@ -316,11 +326,13 @@ void loop() {
         {
           motor1.write(50);
           motor2.write(0);
+          oled_debug("TRACING LEFT", "SLIGHT LEFT");
           delay(10);
         } else if (driver < proximity_tolerance)
         {
           motor1.write(0);
           motor2.write(50);
+          oled_debug("TRACING RIGHT", "SLIGHT RIGHT");
           delay(10);
         } else
         {
@@ -332,11 +344,13 @@ void loop() {
         {
           motor1.write(0);
           motor2.write(50);
+          oled_debug("TRACING RIGHT", "SLIGHT RIGHT");
           delay(10);
         } else if (pass < proximity_tolerance)
         {
           motor1.write(50);
           motor2.write(0);
+          oled_debug("TRACING RIGHT", "SLIGHT LEFT");
           delay(10);
         } else
         {
@@ -355,26 +369,31 @@ void loop() {
     case -2:
       motor1.write(120);
       motor2.write(0);
+      oled_debug("REVERSE", "REVERSE");
       delay(800);
       break;
     case -1:
       motor1.write(120);
-      motor2.write(0);
-      delay(200);
+      motor2.write(40);
+      oled_debug("LEFT TURN", "LEFT LEFT LEFT");
+      delay(400);
       break;
     case 0:
       motor1.write(90);
       motor2.write(90);
+      oled_debug("STOP", "STOP STOP STOP");
       delay(10);
       break;
     case 1:
-      motor1.write(0);
+      motor1.write(40);
       motor2.write(120);
-      delay(200);
+      oled_debug("RIGHT TURN", "RIGHT RIGHT RIGHT");
+      delay(400);
       break;
     case 2:
-      motor1.write(0);
-      motor2.write(0);
+      motor1.write(40);
+      motor2.write(40);
+      oled_debug("FORWARD", "FORWARD F F F F");
       delay(400);
       break;
   }
