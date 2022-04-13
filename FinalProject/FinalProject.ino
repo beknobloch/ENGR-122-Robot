@@ -140,18 +140,20 @@ int turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values. If < 0, turn left. If > 0, turn right.
  
-  double angle_to_turn_coefficient = 200;
+  double angle_to_turn_coefficient = 600;
   
   if (angle < 0)
   {
     Serial.println("I'm turning left.");
-    motor1.write(120);
-    motor2.write(0);
+    oled_debug("TURNING TO ANGLE", "TURNING LEFT");
+    motor1.write(100);
+    motor2.write(70);
     angle *= -1;
   } else {
     Serial.println("I'm turning right.");
-    motor1.write(0);
-    motor2.write(120);
+    oled_debug("TURNING TO ANGLE", "TURNING RIGHT");
+    motor1.write(70);
+    motor2.write(100);
   }
 
   Serial.println("Turning with calculated delay.");
@@ -160,8 +162,6 @@ int turn_with_angle(double angle) {
 
   motor1.write(90);
   motor2.write(90);
-
-  oled_debug("TURNING TO NEXT TARGET", "ANGLE TURN ANGLE TURN");
 
   return int(angle_to_turn_coefficient * angle);
 
@@ -378,7 +378,7 @@ void loop() {
     case -2:
       motor1.write(100);
       motor2.write(0);
-      oled_debug("TURN AROUND", "TURN AROUND");
+      //oled_debug("TURN AROUND", "TURN AROUND");
       delay(800);
       break;
     case -1:
@@ -387,17 +387,17 @@ void loop() {
       delay(10);
       motor1.write(100);
       motor2.write(100);
-      oled_debug("REVERSE", "REVERSE");
+      //oled_debug("REVERSE", "REVERSE");
       delay(100);
       motor1.write(100);
       motor2.write(70);
-      oled_debug("LEFT TURN", "LEFT LEFT LEFT");
+      //oled_debug("LEFT TURN", "LEFT LEFT LEFT");
       delay(800);
       break;
     case 0:
       motor1.write(90);
       motor2.write(90);
-      oled_debug("STOP", "STOP STOP STOP");
+      //oled_debug("STOP", "STOP STOP STOP");
       delay(10);
       break;
     case 1:
@@ -406,17 +406,17 @@ void loop() {
       delay(10);
       motor1.write(100);
       motor2.write(100);
-      oled_debug("REVERSE", "REVERSE");
+      //oled_debug("REVERSE", "REVERSE");
       delay(100);
       motor1.write(70);
       motor2.write(100);
-      oled_debug("RIGHT TURN", "RIGHT RIGHT RIGHT");
+      //oled_debug("RIGHT TURN", "RIGHT RIGHT RIGHT");
       delay(800);
       break;
     case 2:
       motor1.write(70);
       motor2.write(70);
-      oled_debug("FORWARD", "FORWARD F F F F");
+      //oled_debug("FORWARD", "FORWARD F F F F");
       delay(400);
       turn_this_loop = true;
       break;
