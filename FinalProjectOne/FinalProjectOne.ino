@@ -119,8 +119,8 @@ void oled_debug(char * statement, char * statement_one)
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
   double angle_to_return, u_1, u_2, v_1, v_2;
-  u_1 = x_one - x_two;
-  u_2 = y_one - y_two;
+  u_1 = x_two - x_one;
+  u_2 = y_two - y_one;
   v_1 = x_target - x_two;
   v_2 = y_target - y_two;
   
