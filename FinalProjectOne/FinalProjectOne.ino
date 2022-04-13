@@ -282,14 +282,14 @@ void loop() {
   {
       if (!(pass < proximity_tolerance))                                    // Slight right turn.
       {
-          motor1.write(0);
+          motor1.write(70);
           motor2.write(120);
           delay(100);
       }
       else if (!(driver < proximity_tolerance))                             // Slight left turn.
       {
           motor1.write(120);
-          motor2.write(0);
+          motor2.write(70);
           delay(100);
       } else                                                                // U-turn
       {
@@ -316,7 +316,7 @@ void loop() {
     case -1:
       motor1.write(120);
       motor2.write(70);
-      delay(50);
+      delay(400);
       break;
     case 0:
       motor1.write(90);
@@ -326,7 +326,7 @@ void loop() {
     case 1:
       motor1.write(70);
       motor2.write(120);
-      delay(50);
+      delay(400);
       break;
     case 2:
       motor1.write(70);
