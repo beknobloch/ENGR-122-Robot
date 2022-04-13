@@ -127,8 +127,8 @@ double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_t
   double dot = (u_1 * v_1) + (u_2 * v_2);
   double ab = sqrt(pow(u_1, 2) + pow(u_2, 2)) * sqrt(pow(v_1, 2) + pow(v_2, 2));
   
-  if (ab != 0) angle_to_return = acos(dot / ab);
-  else angle_to_return = 0;
+  if ((x_one == x_two && y_one == y_two) || ab == 0)  angle_to_return = 0;
+  else angle_to_return = acos(dot / ab);
 
   // Implement direction
   if ((u_1 * v_1) < (u_2 * v_2))  angle_to_return *= -1;
