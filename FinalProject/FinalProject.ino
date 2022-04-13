@@ -305,7 +305,7 @@ void loop() {
     }
   } else  // tracing != 0
   {
-    if (angle < 5)
+    if (abs(angle) < 0.087)
     {
       tracing = 0;
     } else
