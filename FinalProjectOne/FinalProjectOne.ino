@@ -141,8 +141,14 @@ int turn_with_angle(double angle) {
   // Add code for converting an angle into appropriate motor values. If < 0, turn left. If > 0, turn right.
  
   double angle_to_turn_coefficient = 300;
-  
-  if (angle < 0)
+
+  if (angle == 0)
+  {
+    oled_debug("ANGLE APPEARS", "TO BE ZERO");
+    motor1.write(70);
+    motor2.write(70);
+  }
+  else if (angle < 0)
   {
     Serial.println("I'm turning left.");
     oled_debug("ANGLE TURN", "LEFT LEFT LEFT");
@@ -176,9 +182,8 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 
 int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700};
 int current_target = 0;
-int tracing = 0;
 
-int arrival_tolerance = 10;
+int arrival_tolerance = 50;
 int proximity_tolerance = 4;
 bool reorient = false;
 
@@ -227,10 +232,10 @@ void loop() {
       // END!
       delay(100000000);
     }
+    delay(3000);
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
     turn_with_angle(angle);
-    tracing = 0;
   }
   double center = ultrasonic_center.read(INC);
   double pass = ultrasonic_pass.read(INC);
@@ -302,9 +307,6 @@ void loop() {
       
   }
 
-  recorded_x = x;
-  recorded_y = y;
-
   // Motor control
   switch (motor_control)
   {
@@ -329,6 +331,8 @@ void loop() {
       delay(400);
       break;
     case 2:
+      recorded_x = x;
+      recorded_y = y;
       motor1.write(70);
       motor2.write(70);
       delay(100);
