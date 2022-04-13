@@ -161,6 +161,8 @@ int turn_with_angle(double angle) {
   motor1.write(90);
   motor2.write(90);
 
+  oled_debug("TURNING TO NEXT TARGET", "ANGLE TURN ANGLE TURN");
+
   return int(angle_to_turn_coefficient * angle);
 
 }
@@ -373,6 +375,13 @@ void loop() {
       delay(800);
       break;
     case -1:
+      motor1.write(90);
+      motor2.write(90);
+      delay(10);
+      motor1.write(120);
+      motor2.write(120);
+      oled_debug("REVERSE", "REVERSE");
+      delay(400);
       motor1.write(120);
       motor2.write(40);
       oled_debug("LEFT TURN", "LEFT LEFT LEFT");
@@ -385,6 +394,13 @@ void loop() {
       delay(10);
       break;
     case 1:
+      motor1.write(90);
+      motor2.write(90);
+      delay(10);
+      motor1.write(120);
+      motor2.write(120);
+      oled_debug("REVERSE", "REVERSE");
+      delay(400);
       motor1.write(40);
       motor2.write(120);
       oled_debug("RIGHT TURN", "RIGHT RIGHT RIGHT");
