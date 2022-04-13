@@ -147,12 +147,12 @@ int turn_with_angle(double angle) {
     Serial.println("I'm turning left.");
     oled_debug("ANGLE TURN", "LEFT LEFT LEFT");
     motor1.write(120);
-    motor2.write(40);
+    motor2.write(70);
     angle *= -1;
   } else {
     Serial.println("I'm turning right.");
     oled_debug("ANGLE TURN", "RIGHT RIGHT RIGHT");
-    motor1.write(40);
+    motor1.write(70);
     motor2.write(120);
   }
 
@@ -310,12 +310,12 @@ void loop() {
   {
     case -2:
       motor1.write(120);
-      motor2.write(0);
+      motor2.write(70);
       delay(800);
       break;
     case -1:
       motor1.write(120);
-      motor2.write(0);
+      motor2.write(70);
       delay(50);
       break;
     case 0:
@@ -324,13 +324,13 @@ void loop() {
       delay(10);
       break;
     case 1:
-      motor1.write(0);
+      motor1.write(70);
       motor2.write(120);
       delay(50);
       break;
     case 2:
-      motor1.write(0);
-      motor2.write(0);
+      motor1.write(70);
+      motor2.write(70);
       delay(100);
       reorient = true;
       break;
