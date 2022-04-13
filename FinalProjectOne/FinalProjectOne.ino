@@ -106,6 +106,16 @@ void setup() {
   delay(3000);
 }
 
+void oled_debug(char * statement, char * statement_one)
+{
+  // OLED controls
+  display.clear();
+  display.drawString(0, 0, "DEBUG:");
+  display.drawString(0, 16, statement);
+  display.drawString(0, 32, statement_one);
+  display.display();
+}
+
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
   double angle_to_return, u_1, u_2, v_1, v_2;
@@ -135,12 +145,14 @@ int turn_with_angle(double angle) {
   if (angle < 0)
   {
     Serial.println("I'm turning left.");
+    oled_debug("ANGLE TURN", "LEFT LEFT LEFT");
     motor1.write(120);
-    motor2.write(0);
+    motor2.write(40);
     angle *= -1;
   } else {
     Serial.println("I'm turning right.");
-    motor1.write(0);
+    oled_debug("ANGLE TURN", "RIGHT RIGHT RIGHT");
+    motor1.write(40);
     motor2.write(120);
   }
 
@@ -201,29 +213,6 @@ void loop() {
   y = testCollector[1];
   tar_x = target_coords[current_target * 2];
   tar_y = target_coords[current_target * 2 + 1];
-
-  // OLED controls
-  char temp1[50];
-  char temp2[50];
-  char temp3[50];
-  char temp4[50];
-  sprintf(temp1, "%d", x);
-  sprintf(temp2, "%d", y);
-  sprintf(temp3, "%d", tar_x);
-  sprintf(temp4, "%d", tar_y);
-  const char *c = temp1;
-  const char *d = temp2;
-  const char *e = temp3;
-  const char *f = temp4;
-  display.clear();
-  display.drawString(0, 0, "x: ");
-  display.drawString(20, 0, c);
-  display.drawString(40, 0, "y: ");
-  display.drawString(60, 0, d);
-  display.drawString(0, 16, "Heading to:");
-  display.drawString(0, 32, e);
-  display.drawString(40, 32, f);
-  display.display();
   
   // Serial monitor controls
   Serial.print("x-coordinate: ");
@@ -258,6 +247,31 @@ void loop() {
   {
       turn_with_angle(angle);
       reorient = false;
+  }
+  else
+  {
+    // OLED controls
+    char temp1[50];
+    char temp2[50];
+    char temp3[50];
+    char temp4[50];
+    sprintf(temp1, "%d", x);
+    sprintf(temp2, "%d", y);
+    sprintf(temp3, "%d", tar_x);
+    sprintf(temp4, "%d", tar_y);
+    const char *c = temp1;
+    const char *d = temp2;
+    const char *e = temp3;
+    const char *f = temp4;
+    display.clear();
+    display.drawString(0, 0, "x: ");
+    display.drawString(20, 0, c);
+    display.drawString(40, 0, "y: ");
+    display.drawString(60, 0, d);
+    display.drawString(0, 16, "Heading to:");
+    display.drawString(0, 32, e);
+    display.drawString(40, 32, f);
+    display.display();
   }
   
   if (center < proximity_tolerance)
@@ -309,7 +323,7 @@ void loop() {
     case -1:
       motor1.write(120);
       motor2.write(0);
-      delay(500);
+      delay(50);
       break;
     case 0:
       motor1.write(90);
@@ -319,12 +333,12 @@ void loop() {
     case 1:
       motor1.write(0);
       motor2.write(120);
-      delay(500);
+      delay(50);
       break;
     case 2:
       motor1.write(0);
       motor2.write(0);
-      delay(400);
+      delay(100);
       reorient = true;
       break;
   }
