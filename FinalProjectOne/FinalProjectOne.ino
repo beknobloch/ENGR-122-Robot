@@ -213,13 +213,6 @@ void loop() {
   y = testCollector[1];
   tar_x = target_coords[current_target * 2];
   tar_y = target_coords[current_target * 2 + 1];
-  
-  // Serial monitor controls
-  Serial.print("x-coordinate: ");
-  Serial.println(c);
-  Serial.print("y-coordinate: ");
-  Serial.println(d);
-  Serial.println("\n");
 
 
   // ALGORITHM
