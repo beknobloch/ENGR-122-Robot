@@ -119,8 +119,8 @@ void oled_debug(char * statement, char * statement_one)
 double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_target, int y_target)
 {
   double angle_to_return, u_1, u_2, v_1, v_2;
-  u_1 = x_two - x_one;
-  u_2 = y_two - y_one;
+  u_1 = x_one - x_two;
+  u_2 = y_one - y_two;
   v_1 = x_target - x_two;
   v_2 = y_target - y_two;
   
@@ -133,14 +133,14 @@ double points_to_angle_value(int x_one, int y_one, int x_two, int y_two, int x_t
   // Implement direction
   if ((u_1 * v_1) < (u_2 * v_2))  angle_to_return *= -1;
 
-  return angle_to_return;
+  return angle_to_return * (180/M_PI);
 }
 
 int turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values. If < 0, turn left. If > 0, turn right.
  
-  double angle_to_turn_coefficient = 300;
+  double angle_to_turn_coefficient = 6;
 
   if (angle == 0)
   {
@@ -232,6 +232,8 @@ void loop() {
       // END!
       delay(100000000);
     }
+    motor1.write(90);
+    motor2.write(90);
     delay(3000);
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
