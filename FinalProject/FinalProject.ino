@@ -140,7 +140,7 @@ int turn_with_angle(double angle) {
 
   // Add code for converting an angle into appropriate motor values. If < 0, turn left. If > 0, turn right.
  
-  double angle_to_turn_coefficient = 300;
+  double angle_to_turn_coefficient = 200;
   
   if (angle < 0)
   {
