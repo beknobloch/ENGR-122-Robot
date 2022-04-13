@@ -146,14 +146,14 @@ int turn_with_angle(double angle) {
   {
     Serial.println("I'm turning left.");
     oled_debug("TURNING TO ANGLE", "TURNING LEFT");
-    motor1.write(100);
-    motor2.write(70);
+    motor1.write(120);
+    motor2.write(40);
     angle *= -1;
   } else {
     Serial.println("I'm turning right.");
     oled_debug("TURNING TO ANGLE", "TURNING RIGHT");
-    motor1.write(70);
-    motor2.write(100);
+    motor1.write(40);
+    motor2.write(120);
   }
 
   Serial.println("Turning with calculated delay.");
