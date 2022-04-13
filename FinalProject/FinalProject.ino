@@ -180,6 +180,7 @@ int tracing = 0;
 
 int arrival_tolerance = 10;
 int proximity_tolerance = 4;
+bool turn_this_loop = false;
 
 int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
 int recorded_x = 100;
@@ -266,6 +267,12 @@ void loop() {
   // Real Code:
 
   double angle = points_to_angle_value(recorded_x, recorded_y, x, y, tar_x, tar_y);
+
+  if (turn_this_loop)
+  {
+    turn_with_angle(angle);
+    turn_this_loop = false;
+  }
 
   if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
   {
@@ -369,23 +376,23 @@ void loop() {
   switch (motor_control)
   {
     case -2:
-      motor1.write(120);
+      motor1.write(100);
       motor2.write(0);
-      oled_debug("REVERSE", "REVERSE");
+      oled_debug("TURN AROUND", "TURN AROUND");
       delay(800);
       break;
     case -1:
       motor1.write(90);
       motor2.write(90);
       delay(10);
-      motor1.write(120);
-      motor2.write(120);
+      motor1.write(100);
+      motor2.write(100);
       oled_debug("REVERSE", "REVERSE");
-      delay(400);
-      motor1.write(120);
-      motor2.write(40);
+      delay(100);
+      motor1.write(100);
+      motor2.write(70);
       oled_debug("LEFT TURN", "LEFT LEFT LEFT");
-      delay(400);
+      delay(800);
       break;
     case 0:
       motor1.write(90);
@@ -397,20 +404,21 @@ void loop() {
       motor1.write(90);
       motor2.write(90);
       delay(10);
-      motor1.write(120);
-      motor2.write(120);
+      motor1.write(100);
+      motor2.write(100);
       oled_debug("REVERSE", "REVERSE");
-      delay(400);
-      motor1.write(40);
-      motor2.write(120);
+      delay(100);
+      motor1.write(70);
+      motor2.write(100);
       oled_debug("RIGHT TURN", "RIGHT RIGHT RIGHT");
-      delay(400);
+      delay(800);
       break;
     case 2:
-      motor1.write(40);
-      motor2.write(40);
+      motor1.write(70);
+      motor2.write(70);
       oled_debug("FORWARD", "FORWARD F F F F");
       delay(400);
+      turn_this_loop = true;
       break;
   }
 
