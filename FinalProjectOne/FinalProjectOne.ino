@@ -184,7 +184,7 @@ int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700};
 int current_target = 0;
 
 int arrival_tolerance = 50;
-int proximity_tolerance = 4;
+int proximity_tolerance = 2;
 bool reorient = false;
 
 int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
