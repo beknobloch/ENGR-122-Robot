@@ -36,7 +36,7 @@ boolean flag_payload;
 const char* mqtt_server = "155.246.62.110";   //MQTT Broker(Server) Address
 const char* MQusername = "jojo";              //MQTT username
 const char* MQpassword = "hereboy";           //MQTT password
-const char* MQtopic = "louis_lidar1";         //MQTT Topic for Arena_1 (EAS011 - South)
+const char* MQtopic = "louis_lidar2";         //MQTT Topic for Arena_1 (EAS011 - South)
 const int mqtt_port = 1883;                   //MQTT port#
 
 //Stevens WiFi Setting variables
@@ -144,7 +144,7 @@ int turn_with_angle(double angle) {
 
   if (angle == 0)
   {
-    oled_debug("ANGLE APPEARS", "TO BE ZERO");
+    oled_debug("ANGLE APPEARS", "TO BE 0");
     motor1.write(70);
     motor2.write(70);
   }
@@ -183,7 +183,7 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700};
 int current_target = 0;
 
-int arrival_tolerance = 50;
+int arrival_tolerance = 80;
 int proximity_tolerance = 2;
 bool reorient = false;
 
@@ -231,10 +231,12 @@ void loop() {
     {
       // END!
       delay(100000000);
+      oled_debug("FINISH!", "VICTORY!");
     }
     motor1.write(90);
     motor2.write(90);
-    delay(3000);
+    oled_debug("ARRIVAL!", "NEXT TARGET!");
+    delay(1500);
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
     turn_with_angle(angle);
