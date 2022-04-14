@@ -317,12 +317,12 @@ void loop() {
     case -2:
       motor1.write(120);
       motor2.write(70);
-      delay(800);
+      delay(400);
       break;
     case -1:
       motor1.write(120);
       motor2.write(70);
-      delay(400);
+      delay(200);
       break;
     case 0:
       motor1.write(90);
@@ -332,14 +332,14 @@ void loop() {
     case 1:
       motor1.write(70);
       motor2.write(120);
-      delay(400);
+      delay(200);
       break;
     case 2:
       recorded_x = x;
       recorded_y = y;
       motor1.write(70);
       motor2.write(70);
-      delay(100);
+      delay(200);
       reorient = true;
       break;
   }
