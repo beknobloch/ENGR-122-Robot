@@ -27,7 +27,7 @@ Ultrasonic ultrasonic_center(D9, D6);  // An ultrasonic sensor HC-04
 Ultrasonic ultrasonic_pass(D10, D7);  // An ultrasonic sensor HC-04
 
 SSD1306 display(0x3C, D14, D15);
-  
+
 //MQTT Communication associated variables
 char payload_global[100];                     
 boolean flag_payload;                         
@@ -36,7 +36,7 @@ boolean flag_payload;
 const char* mqtt_server = "155.246.62.110";   //MQTT Broker(Server) Address
 const char* MQusername = "jojo";              //MQTT username
 const char* MQpassword = "hereboy";           //MQTT password
-const char* MQtopic = "louis_lidar2";         //MQTT Topic for Arena_1 (EAS011 - South)
+const char* MQtopic = "louis_lidar1";         //MQTT Topic for Arena_1 (EAS011 - South)
 const int mqtt_port = 1883;                   //MQTT port#
 
 //Stevens WiFi Setting variables

@@ -238,7 +238,13 @@ void loop() {
     motor1.write(90);
     motor2.write(90);
     oled_debug("ARRIVAL!", "NEXT TARGET!");
-    delay(1500);
+    delay(500);
+    motor1.write(120);
+    motor2.write(70);
+    delay(1000);
+    motor1.write(70);
+    motor2.write(70);
+    delay(100);
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
     turn_with_angle(angle);
@@ -295,13 +301,15 @@ void loop() {
       {
           motor1.write(70);
           motor2.write(120);
-          delay(100);
+          oled_debug("slight turn", "right");
+          delay(150);
       }
-      else if (!(driver < proximity_tolerance))                             // Slight left turn.
+      else if (!(driver < proximity_tolerance + 1))                             // Slight left turn.
       {
           motor1.write(120);
           motor2.write(70);
-          delay(100);
+          oled_debug("slight turn", "left");
+          delay(150);
       } else                                                                // U-turn
       {
           motor_control = -2;
