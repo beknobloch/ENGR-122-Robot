@@ -33,15 +33,15 @@ char payload_global[100];
 boolean flag_payload;                         
 
 //MQTT Setting variables
-const char* mqtt_server = "155.246.62.110";   //MQTT Broker(Server) Address
-const char* MQusername = "jojo";              //MQTT username
-const char* MQpassword = "hereboy";           //MQTT password
-const char* MQtopic = "louis_lidar2";         //MQTT Topic for Arena_1 (EAS011 - South)
+const char* mqtt_server = "192.168.0.100";   //MQTT Broker(Server) Address
+const char* MQusername = "user";              //MQTT username
+const char* MQpassword = "Stevens1870";           //MQTT password
+const char* MQtopic = "louis_lidar_new";         //MQTT Topic for Arena_1 (EAS011 - South)
 const int mqtt_port = 1883;                   //MQTT port#
 
 //Stevens WiFi Setting variables
-const char* ssid = "Stevens-IoT";             //Stevens Wi-Fi SSID (Service Set IDentifier)   
-const char* password = "nMN882cmg7";          //Stevens Wi-Fi Password
+const char* ssid = "TP-Link_6260";             //Stevens Wi-Fi SSID (Service Set IDentifier)   
+const char* password = "60801074";          //Stevens Wi-Fi Password
 
 //WiFi Define
 WiFiClient espClient;                         
@@ -180,7 +180,7 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 
 // Define logical variables.
 
-int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700};
+int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700, 150, 600};
 int current_target = 0;
 
 int arrival_tolerance = 80;
@@ -227,7 +227,7 @@ void loop() {
   if (coords_overlap(x, y, tar_x, tar_y, arrival_tolerance))
   {
     current_target++;
-    if (current_target == 4)
+    if (current_target == 5)
     {
       // END!
       oled_debug("FINISH!", "VICTORY!");
