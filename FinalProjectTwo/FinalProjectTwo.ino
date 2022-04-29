@@ -238,7 +238,7 @@ void loop() {
     motor1.write(90);
     motor2.write(90);
     oled_debug("ARRIVAL!", "NEXT TARGET!");
-    delay(500);
+    delay(2000);
     motor1.write(120);
     motor2.write(70);
     delay(1000);
