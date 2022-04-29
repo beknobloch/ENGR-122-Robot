@@ -142,11 +142,9 @@ int turn_with_angle(double angle) {
  
   double angle_to_turn_coefficient = 6;
 
-  if (angle == 0)
+  if (abs(angle) < 10)
   {
     oled_debug("ANGLE APPEARS", "TO BE 0");
-    motor1.write(70);
-    motor2.write(70);
   }
   else if (angle < 0)
   {
@@ -155,16 +153,15 @@ int turn_with_angle(double angle) {
     motor1.write(120);
     motor2.write(70);
     angle *= -1;
+    delay(angle_to_turn_coefficient * angle);
+
   } else {
     Serial.println("I'm turning right.");
     oled_debug("ANGLE TURN", "RIGHT RIGHT RIGHT");
     motor1.write(70);
     motor2.write(120);
+    delay(angle_to_turn_coefficient * angle);
   }
-
-  Serial.println("Turning with calculated delay.");
-
-  delay(angle_to_turn_coefficient * angle);
 
   motor1.write(90);
   motor2.write(90);
@@ -180,7 +177,7 @@ bool coords_overlap(int x_one, int y_one, int x_two, int y_two, int tolerance)
 
 // Define logical variables.
 
-int target_coords [8] = {1400, 150, 650, 150, 150, 150, 2000, 700, 150, 600};
+int target_coords [10] = {1400, 150, 150, 600, 150, 150, 650, 150, 2000, 700};
 int current_target = 0;
 
 int arrival_tolerance = 80;
@@ -188,8 +185,8 @@ int proximity_tolerance = 2;
 bool reorient = false;
 
 int motor_control = 0; // 0 means no movement. -1 and 1 mean turn left and turn right respectively. -2 means turn around, 2 means forward.
-int recorded_x = 100;
-int recorded_y = 650;
+int recorded_x = 1400;
+int recorded_y = 150;
 
 void loop() {
   //subscribe the data from MQTT server
@@ -239,12 +236,8 @@ void loop() {
     motor2.write(90);
     oled_debug("ARRIVAL!", "NEXT TARGET!");
     delay(2000);
-    motor1.write(70);
-    motor2.write(70);
-    delay(100);
     tar_x = target_coords[current_target * 2];
     tar_y = target_coords[current_target * 2 + 1];
-    turn_with_angle(angle);
   }
   double center = ultrasonic_center.read(INC);
   double pass = ultrasonic_pass.read(INC);
@@ -286,10 +279,12 @@ void loop() {
       if (driver > pass)                                                    // Left.
       {
           motor_control = -1;
+          oled_debug("hard", "left");
       }
       else                                                                  // Right.
       {
           motor_control = 1;
+          oled_debug("hard", "right");
       }
   }
   else if (pass < proximity_tolerance || driver < proximity_tolerance)
@@ -310,12 +305,13 @@ void loop() {
       } else                                                                // U-turn
       {
           motor_control = -2;
+          oled_debug("U", "TURN");
       }
   }
   else                                                                      // Forward.
   {
       motor_control = 2;
-      
+      oled_debug("forward", "forward");
   }
 
   // Motor control
@@ -344,10 +340,10 @@ void loop() {
     case 2:
       recorded_x = x;
       recorded_y = y;
+      reorient = true;
       motor1.write(70);
       motor2.write(70);
-      delay(200);
-      reorient = true;
+      delay(2000);
       break;
   }
 
